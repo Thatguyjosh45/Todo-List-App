@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Todo List App</title>
+        <!-- Font Awesome for the Trash Can Icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        <style>
+            /* Body styling */
+            body {
+                background-image: url("https://img.freepik.com/free-vector/background-wave-minimalist-modern-style_483537-5220.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1726272000&semt=ais_hybrid");
+                background-size: cover;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            /* Centered container box */
+            .container {
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: 300px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Heading styling */
+            h1 {
+                font-size: 24px;
+                color: #333;
+                text-align: left; /* Align text to the left */
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Task input field and button container */
+            .task-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            input[type="text"] {
+                width: 80%;
+                padding: 10px;
+                margin-right: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+            }
+
+            /* Plus button styling */
+            #addTaskBtn {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            #addTaskBtn:hover {
+                background-color: #45a049;
+            }
+
+            /* Task list styling */
+            #myUL {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                text-align: left;
+            }
+
+            li {
+                padding: 10px;
+                margin: 5px 0;
+                background-color: #f4f4f4;
+                border-radius: 4px;
+                cursor: pointer;
+                position: relative;
+            }
+
+            li:hover {
+                background-color: #ddd;
+            }
+
+            /* Trash can icon styling */
+            .trash-icon {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                font-size: 18px;
+                color: #e74c3c;
+                opacity: 0;
+                transition: opacity 0.2s;
+                cursor: pointer;
+            }
+
+            li:hover .trash-icon {
+                opacity: 1;
+            }
+
+            /* Footer with task count and clear button */
+            .footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 20px;
+                font-size: 14px;
+            }
+
+            /* Clear All button styling */
+            #clearAllBtn {
+                padding: 5px 10px;
+                border: none;
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #clearAllBtn:hover {
+                background-color: #45a049;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Todo List App</h1>
+            <form id="taskForm">
+                <div class="task-container">
+                    <input type="text" id="task" name="task" placeholder="Add a task" required>
+                    <button type="submit" id="addTaskBtn">+</button>
+                </div>
+            </form>
+
+            <ul id="myUL">
+                <!-- List items will be dynamically added here -->
+            </ul>
+
+            <div class="footer">
+                <span id="taskCount">You have 0 pending tasks</span>
+                <button type="button" id="clearAllBtn">Clear All</button>
+            </div>
+        </div>
+
+        <script>
+            // Get references to the elements
+            const taskForm = document.getElementById('taskForm');
+            const taskInput = document.getElementById('task');
+            const taskList = document.getElementById('myUL');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            const taskCount = document.getElementById('taskCount');
+
+            // Function to update the task count
+            function updateTaskCount() {
+                const taskItems = taskList.getElementsByTagName('li');
+                taskCount.textContent = `You have ${taskItems.length} pending tasks`;
+            }
+
+            // Add task to the list
+            taskForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const taskText = taskInput.value.trim();
+                if (taskText) {
+                    const newTask = document.createElement('li');
+                    newTask.textContent = taskText;
+
+                    // Create the trash can icon
+                    const trashIcon = document.createElement('i');
+                    trashIcon.classList.add('fas', 'fa-trash', 'trash-icon');
+                    newTask.appendChild(trashIcon);
+
+                    // Add event listener for the trash icon to remove the task
+                    trashIcon.addEventListener('click', function (event) {
+                        event.stopPropagation(); // Prevent the task click event from firing
+                        newTask.remove(); // Remove the task from the list
+                        updateTaskCount(); // Update task count
+                    });
+
+                    taskList.appendChild(newTask);
+                    taskInput.value = ''; // Clear input field
+                    updateTaskCount(); // Update task count
+                }
+            });
+
+            // Clear all tasks when "Clear All" button is clicked
+            clearAllBtn.addEventListener('click', function () {
+                taskList.innerHTML = ''; // Remove all tasks
+                updateTaskCount(); // Update task count
+            });
+        </script>
+    </body>
+</html>
